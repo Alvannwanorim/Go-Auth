@@ -10,4 +10,5 @@ func AuthRoute(route *gin.Engine) {
 	route.POST("/sign-up", controllers.CreateUser)
 	route.POST("/login", controllers.Login)
 	route.GET("/validate", middlewares.AuthMiddleware, controllers.Validate)
+	route.GET("/users", middlewares.AuthMiddleware, controllers.GetUsers)
 }

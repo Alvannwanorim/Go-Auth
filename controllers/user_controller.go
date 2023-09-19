@@ -19,7 +19,7 @@ type JwtClaim struct {
 }
 
 func CreateUser(c *gin.Context) {
-	var existingUser models.UserEntity
+	var existingUser models.User
 	var body struct {
 		Email     string `json:"email"`
 		Password  string `json:"password"`
@@ -54,7 +54,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	//Create new user
-	user := models.UserEntity{Email: body.Email, FirstName: body.FirstName, LastName: body.LastName, Password: string(password)}
+	user := models.User{Email: body.Email, FirstName: body.FirstName, LastName: body.LastName, Password: string(password)}
 	result := initializers.DB.Create(&user)
 
 	if result.Error != nil {
@@ -70,7 +70,7 @@ func Login(c *gin.Context) {
 
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 
-	var user models.UserEntity
+	var user models.User
 
 	var body struct {
 		Email    string `json:"email"`
@@ -145,8 +145,18 @@ func Validate(c *gin.Context) {
 
 }
 
-func GetUserByEmail(email any) *models.UserEntity {
-	user := new(models.UserEntity)
+func GetUserByEmail(email any) *models.User {
+	user := new(models.User)
 	initializers.DB.First(&user, "email = ?", email)
 	return user
+}
+
+func GetUsers(c *gin.Context) {
+	var users []models.User
+
+	result := initializers.DB.Find(&users)
+	fmt.Println(result.RowsAffected)
+	c.JSON(http.StatusOK, gin.H{
+		"users": users,
+	})
 }

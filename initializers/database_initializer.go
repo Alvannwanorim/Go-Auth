@@ -24,5 +24,5 @@ func ConnectDb() {
 }
 
 func SyncDatabase() {
-	DB.AutoMigrate(&models.UserEntity{})
+	DB.AutoMigrate(&models.User{})
 }
